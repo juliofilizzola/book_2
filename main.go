@@ -18,6 +18,8 @@ func main() {
 	// @todo create file from routes
 
 	r.POST("/user", controllers.CreateUser)
+	r.GET("/user", controllers.GetUsers)
+	r.GET("/user/:id", controllers.GetUser)
 
 	err := r.Run()
 	if err != nil {
