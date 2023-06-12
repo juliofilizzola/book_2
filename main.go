@@ -2,13 +2,10 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
+	"github.com/juliofilizzola/book_2/controllers"
 	"github.com/juliofilizzola/book_2/initializers"
 	"log"
 )
-
-//type Repository struct {
-//	DB *gorm.DB
-//}
 
 func init() {
 	initializers.LoadEnvVariables()
@@ -18,11 +15,9 @@ func init() {
 func main() {
 	r := gin.Default()
 
-	r.GET("/", func(context *gin.Context) {
-		context.JSON(200, gin.H{
-			"message": "pong",
-		})
-	})
+	// @todo create file from routes
+
+	r.POST("/user", controllers.CreateUser)
 
 	err := r.Run()
 	if err != nil {
