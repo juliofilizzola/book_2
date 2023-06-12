@@ -6,10 +6,12 @@ import (
 	"log"
 )
 
+var DB *gorm.DB
+
 func ConnectDatabase() {
-	//var DB *gorm.DB
+	var err error
 	dsn := UrlDatabase
-	_, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	DB, err = gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("error")
 	}
