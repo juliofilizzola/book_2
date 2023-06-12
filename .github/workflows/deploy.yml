@@ -38,6 +38,12 @@ jobs:
       - name: Build
         run: go build -v ./...
 
+      - name: Create env file
+        run: |
+          cat > .env << EOF
+          ${{ secrets.ENV }}
+          EOF
+
       - name: RUN <MIGRATE>
         run: go run migrate/migrate.go
 
