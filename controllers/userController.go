@@ -79,3 +79,59 @@ func GetUsers(context *gin.Context) {
 		"users": users,
 	})
 }
+
+func UpdateUser(context *gin.Context) {
+	var body struct {
+		Name  string
+		Email string
+		Nick  string
+	}
+	// @todo create validation email
+
+	err := context.Bind(&body)
+
+	if err != nil {
+		fmt.Println(err)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+	id := context.Param("id")
+	// @todo validation from not found
+
+	var user models.User
+	initializers.DB.First(&user, id)
+
+	result := initializers.DB.Model(&user).Updates(models.User{
+		Name:  body.Name,
+		Email: body.Email,
+		Nick:  body.Nick,
+	})
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"user": user,
+	})
+}
+
+func DeleteUser(context *gin.Context) {
+	id := context.Param("id")
+
+	var user models.User
+
+	result := initializers.DB.Delete(&user, id)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"user": user,
+	})
+}
