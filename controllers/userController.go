@@ -117,3 +117,21 @@ func UpdateUser(context *gin.Context) {
 		"user": user,
 	})
 }
+
+func DeleteUser(context *gin.Context) {
+	id := context.Param("id")
+
+	var user models.User
+
+	result := initializers.DB.Delete(&user, id)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"user": user,
+	})
+}

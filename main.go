@@ -21,6 +21,7 @@ func main() {
 	r.GET("/user", controllers.GetUsers)
 	r.GET("/user/:id", controllers.GetUser)
 	r.PATCH("user/:id", controllers.UpdateUser)
+	r.DELETE("user/:id", controllers.DeleteUser)
 
 	err := r.Run()
 	if err != nil {
