@@ -20,6 +20,7 @@ func main() {
 	r.POST("/user", controllers.CreateUser)
 	r.GET("/user", controllers.GetUsers)
 	r.GET("/user/:id", controllers.GetUser)
+	r.PATCH("user/:id", controllers.UpdateUser)
 
 	err := r.Run()
 	if err != nil {
