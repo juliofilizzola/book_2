@@ -22,7 +22,7 @@ func main() {
 	r.GET("/user/:id", controllers.GetUser)
 	r.PATCH("user/:id", controllers.UpdateUser)
 	r.DELETE("user/:id", controllers.DeleteUser)
-
+	r.PUT("followers/:id/:followerId", controllers.CreateFollowers)
 	err := r.Run()
 	if err != nil {
 		log.Fatal(err)
