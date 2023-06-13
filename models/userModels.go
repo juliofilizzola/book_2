@@ -4,9 +4,10 @@ import "gorm.io/gorm"
 
 type User struct {
 	gorm.Model
-	Name      string `gorm:"not null"`
-	Email     string `gorm:"unique;not null"`
-	Nick      string `gorm:"unique;not null"`
-	Password  string
-	Followers []User `gorm:"many2many:follower_id" json:"followers"`
+	Name        string `gorm:"not null"`
+	Email       string `gorm:"unique;not null"`
+	Nick        string `gorm:"unique;not null"`
+	Password    string
+	Followers   []User        `gorm:"many2many:follower_id" json:"followers"`
+	Publication []Publication `gorm:"foreignKey:AuthId"`
 }
