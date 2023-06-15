@@ -24,6 +24,7 @@ func main() {
 	r.DELETE("user/:id", controllers.DeleteUser)
 	r.PUT("followers/:id/:followerId", controllers.CreateFollowers)
 	r.DELETE("followers/:id/:followerId", controllers.DesFollow)
+	r.POST("publication/:id", controllers.CreatePublication)
 	err := r.Run()
 	if err != nil {
 		log.Fatal(err)
