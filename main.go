@@ -17,15 +17,26 @@ func main() {
 
 	// @todo create file from routes
 
+	// user routes
 	r.POST("/user", controllers.CreateUser)
 	r.GET("/user", controllers.GetUsers)
 	r.GET("/user/:id", controllers.GetUser)
 	r.PATCH("user/:id", controllers.UpdateUser)
 	r.DELETE("user/:id", controllers.DeleteUser)
+
+	// follow routes
 	r.PUT("followers/:id/:followerId", controllers.CreateFollowers)
 	r.DELETE("followers/:id/:followerId", controllers.DesFollow)
+
+	// publication routes
 	r.POST("publication/:id", controllers.CreatePublication)
+	r.GET("publication/:id", controllers.GetPublicationsByUser)
+	r.GET("publication", controllers.GetPublications)
+	r.PUT("publication/:id", controllers.UpdatePublication)
+	r.DELETE("publication/:id", controllers.DeletePublication)
+
 	err := r.Run()
+
 	if err != nil {
 		log.Fatal(err)
 	}
