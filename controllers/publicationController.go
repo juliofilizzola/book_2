@@ -42,3 +42,99 @@ func CreatePublication(context *gin.Context) {
 		"publication": publication,
 	})
 }
+
+func GetPublicationsByUser(context *gin.Context) {
+	var publications []models.Publication
+
+	id := context.Param("id")
+	// @todo validation from not found
+
+	result := initializers.DB.Where("auth_id = ?", id).Find(&publications)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"publications": publications,
+	})
+}
+
+func GetPublications(context *gin.Context) {
+	var publications []models.Publication
+
+	// @todo validation from not found
+
+	result := initializers.DB.Find(&publications)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"publications": publications,
+	})
+}
+
+func UpdatePublication(context *gin.Context) {
+	var body struct {
+		Title       string
+		Content     string
+		Description string
+	}
+
+	err := context.Bind(&body)
+
+	if err != nil {
+		fmt.Println(err)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+	id := context.Param("id")
+
+	publication := models.Publication{
+		Title:       body.Title,
+		Description: body.Description,
+		Content:     body.Title,
+	}
+
+	initializers.DB.First(&publication, id)
+
+	result := initializers.DB.Model(&publication).Updates(models.Publication{
+		Title:       body.Title,
+		Description: body.Description,
+		Content:     body.Content,
+	})
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"publication": publication,
+	})
+}
+
+func DeletePublication(context *gin.Context) {
+	id := context.Param("id")
+
+	var publication models.Publication
+
+	result := initializers.DB.Delete(&publication, id)
+
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	context.JSON(http.StatusAccepted, gin.H{
+		"publication": publication,
+	})
+}
