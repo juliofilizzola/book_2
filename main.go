@@ -35,6 +35,10 @@ func main() {
 	r.PUT("publication/:id", controllers.UpdatePublication)
 	r.DELETE("publication/:id", controllers.DeletePublication)
 
+	// like publications routes
+	r.GET("like/:id", controllers.LikePublication)
+	r.GET("dislike/:id", controllers.DislikePublication)
+
 	err := r.Run()
 
 	if err != nil {
