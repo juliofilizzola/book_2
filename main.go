@@ -39,6 +39,9 @@ func main() {
 	r.GET("like/:id", controllers.LikePublication)
 	r.GET("dislike/:id", controllers.DislikePublication)
 
+	// login route
+	r.POST("login", controllers.Login)
+
 	err := r.Run(initializers.PORT)
 
 	if err != nil {
