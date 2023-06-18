@@ -39,7 +39,7 @@ func main() {
 	r.GET("like/:id", controllers.LikePublication)
 	r.GET("dislike/:id", controllers.DislikePublication)
 
-	err := r.Run()
+	err := r.Run(initializers.PORT)
 
 	if err != nil {
 		log.Fatal(err)
