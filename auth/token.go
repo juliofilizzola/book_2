@@ -10,8 +10,8 @@ import (
 	"time"
 )
 
-func GenerateToken(userId string) (string, error) {
-	fmt.Println(userId)
+func GenerateToken(userId uint) (string, error) {
+
 	permission := jwt.MapClaims{}
 	permission["authorized"] = true
 	permission["exp"] = time.Now().Add(time.Hour * 6).Unix()
