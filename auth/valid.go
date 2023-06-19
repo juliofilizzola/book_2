@@ -1,11 +1,11 @@
 package auth
 
 import (
-	"net/http"
+	"github.com/gin-gonic/gin"
 )
 
-func ValidUser(r *http.Request, userId string) bool {
-	userIdToken, err := GetUserId(r)
+func ValidUser(context *gin.Context, userId string) bool {
+	userIdToken, err := GetUserId(context)
 	if err != nil {
 		return false
 	}
