@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/juliofilizzola/book_2/auth"
 	"github.com/juliofilizzola/book_2/initializers"
 	"github.com/juliofilizzola/book_2/models"
 	"gorm.io/gorm"
@@ -50,6 +51,11 @@ func CreateFollowers(context *gin.Context) {
 
 func DesFollow(context *gin.Context) {
 	id := context.Param("id")
+	valid := auth.ValidUser(context, id)
+	if !valid {
+		context.Status(http.StatusUnauthorized)
+		return
+	}
 	followerId := context.Param("followerId")
 	formatId, err := strconv.ParseUint(followerId, 10, 64)
 

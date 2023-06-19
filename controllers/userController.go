@@ -105,9 +105,18 @@ func UpdateUser(context *gin.Context) {
 		return
 	}
 	id := context.Param("id")
+
 	// @todo validation from not found
 
+	valid := auth.ValidUser(context, id)
+
+	if !valid {
+		context.Status(http.StatusUnauthorized)
+		return
+	}
+
 	var user models.User
+
 	initializers.DB.First(&user, id)
 
 	result := initializers.DB.Model(&user).Updates(models.User{
@@ -129,6 +138,11 @@ func UpdateUser(context *gin.Context) {
 
 func DeleteUser(context *gin.Context) {
 	id := context.Param("id")
+
+	if valid := auth.ValidUser(context, id); !valid {
+		context.Status(http.StatusUnauthorized)
+		return
+	}
 
 	var user models.User
 

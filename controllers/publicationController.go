@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/juliofilizzola/book_2/auth"
 	"github.com/juliofilizzola/book_2/initializers"
 	"github.com/juliofilizzola/book_2/models"
 	"net/http"
@@ -102,16 +103,29 @@ func UpdatePublication(context *gin.Context) {
 		Content:     body.Title,
 	}
 
-	initializers.DB.First(&publication, id)
+	result := initializers.DB.First(&publication, id)
 
-	result := initializers.DB.Model(&publication).Updates(models.Publication{
+	if result.Error != nil {
+		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	valid := auth.ValidUser(context, publication.AuthId)
+
+	if !valid {
+		context.Status(http.StatusUnauthorized)
+		return
+	}
+
+	up := initializers.DB.Model(&publication).Updates(models.Publication{
 		Title:       body.Title,
 		Description: body.Description,
 		Content:     body.Content,
 	})
 
-	if result.Error != nil {
-		fmt.Println(result.Error)
+	if up.Error != nil {
+		fmt.Println(up.Error)
 		context.Status(http.StatusBadRequest)
 		return
 	}
@@ -126,10 +140,22 @@ func DeletePublication(context *gin.Context) {
 
 	var publication models.Publication
 
-	result := initializers.DB.Delete(&publication, id)
+	result := initializers.DB.First(&publication, id)
 
 	if result.Error != nil {
 		fmt.Println(result.Error)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	valid := auth.ValidUser(context, publication.AuthId)
+
+	if !valid {
+		context.Status(http.StatusUnauthorized)
+		return
+	}
+
+	if deleted := initializers.DB.Delete(&publication, id); deleted.Error != nil {
 		context.Status(http.StatusBadRequest)
 		return
 	}

@@ -11,8 +11,8 @@ func ValidUser(context *gin.Context, userId string) bool {
 	}
 
 	if userId == userIdToken {
-		return false
+		return true
 	}
 
-	return true
+	return false
 }
