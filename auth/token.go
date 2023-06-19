@@ -3,9 +3,9 @@ package auth
 import (
 	"errors"
 	"fmt"
+	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/juliofilizzola/book_2/initializers"
-	"net/http"
 	"strings"
 	"time"
 )
@@ -23,8 +23,9 @@ func GenerateToken(userId uint) (string, error) {
 	return s, nil
 }
 
-func ValidToken(r *http.Request) error {
-	tokenString := getToken(r)
+func ValidToken(context *gin.Context) error {
+	tokenString := getToken(context)
+	fmt.Println(tokenString, "token_@")
 	token, err := jwt.Parse(tokenString, getKey)
 
 	if err != nil {
@@ -36,13 +37,14 @@ func ValidToken(r *http.Request) error {
 	return errors.New("token invalid")
 }
 
-func getToken(r *http.Request) string {
-	token := r.Header.Get("Authorization")
+func getToken(context *gin.Context) string {
+	token := context.Request.Header["Authorization"][0]
+
 	formatToken := strings.Split(token, " ")
 	if len(formatToken) == 2 {
 		return formatToken[1]
 	}
-	return ""
+	return token
 }
 
 func getKey(token *jwt.Token) (interface{}, error) {
@@ -53,8 +55,8 @@ func getKey(token *jwt.Token) (interface{}, error) {
 	return []byte(initializers.SecretKey), nil
 }
 
-func GetUserId(r *http.Request) (string, error) {
-	tokenString := getToken(r)
+func GetUserId(context *gin.Context) (string, error) {
+	tokenString := getToken(context)
 	token, err := jwt.Parse(tokenString, getKey)
 	if err != nil {
 		return "", err
