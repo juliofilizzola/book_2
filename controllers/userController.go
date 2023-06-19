@@ -3,6 +3,7 @@ package controllers
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/juliofilizzola/book_2/auth"
 	"github.com/juliofilizzola/book_2/initializers"
 	"github.com/juliofilizzola/book_2/models"
 	"net/http"
@@ -27,11 +28,19 @@ func CreateUser(context *gin.Context) {
 		return
 	}
 
+	passwordHash, err := auth.Hash(body.Password)
+
+	if err != nil {
+		fmt.Println(err)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
 	user := models.User{
 		Name:     body.Name,
 		Email:    body.Email,
 		Nick:     body.Nick,
-		Password: body.Password,
+		Password: string(passwordHash),
 	}
 
 	result := initializers.DB.Create(&user)
