@@ -5,12 +5,11 @@ import (
 	"github.com/joho/godotenv"
 	"log"
 	"os"
-	"strconv"
 )
 
 var (
 	UrlDatabase = ""
-	PORT        = 0
+	PORT        = ""
 	SecretKey   = ""
 )
 
@@ -21,11 +20,8 @@ func LoadEnvVariables() {
 		log.Fatal(err)
 	}
 
-	PORT, err = strconv.Atoi(os.Getenv("API_PORT"))
+	PORT = fmt.Sprint(os.Getenv("API_PORT"))
 
-	if err != nil {
-		PORT = 9000
-	}
 	fmt.Println("init")
 	UrlDatabase = fmt.Sprint(os.Getenv("URL_DATABASE_ENV"))
 

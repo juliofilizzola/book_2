@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/juliofilizzola/book_2/controllers"
 	"github.com/juliofilizzola/book_2/initializers"
+	"github.com/juliofilizzola/book_2/middlewares"
 	"log"
 )
 
@@ -17,29 +18,38 @@ func main() {
 
 	// @todo create file from routes
 
+	authorized := r.Group("/")
+
+	authorized.Use(middlewares.Authentication())
+	{
+		// user routes
+		authorized.GET("/user", controllers.GetUsers)
+		authorized.GET("/user/:id", controllers.GetUser)
+		authorized.PATCH("user/:id", controllers.UpdateUser)
+		authorized.DELETE("user/:id", controllers.DeleteUser)
+		// follow routes
+		authorized.PUT("followers/:id/:followerId", controllers.CreateFollowers)
+		authorized.DELETE("followers/:id/:followerId", controllers.DesFollow)
+
+		// publication routes
+		authorized.POST("publication/:id", controllers.CreatePublication)
+		authorized.GET("publication/:id", controllers.GetPublicationsByUser)
+		authorized.GET("publication", controllers.GetPublications)
+		authorized.PUT("publication/:id", controllers.UpdatePublication)
+		authorized.DELETE("publication/:id", controllers.DeletePublication)
+
+		// like publications routes
+		authorized.GET("like/:id", controllers.LikePublication)
+		authorized.GET("dislike/:id", controllers.DislikePublication)
+
+	}
 	// user routes
 	r.POST("/user", controllers.CreateUser)
-	r.GET("/user", controllers.GetUsers)
-	r.GET("/user/:id", controllers.GetUser)
-	r.PATCH("user/:id", controllers.UpdateUser)
-	r.DELETE("user/:id", controllers.DeleteUser)
 
-	// follow routes
-	r.PUT("followers/:id/:followerId", controllers.CreateFollowers)
-	r.DELETE("followers/:id/:followerId", controllers.DesFollow)
+	// login route
+	r.POST("login", controllers.Login)
 
-	// publication routes
-	r.POST("publication/:id", controllers.CreatePublication)
-	r.GET("publication/:id", controllers.GetPublicationsByUser)
-	r.GET("publication", controllers.GetPublications)
-	r.PUT("publication/:id", controllers.UpdatePublication)
-	r.DELETE("publication/:id", controllers.DeletePublication)
-
-	// like publications routes
-	r.GET("like/:id", controllers.LikePublication)
-	r.GET("dislike/:id", controllers.DislikePublication)
-
-	err := r.Run()
+	err := r.Run(initializers.PORT)
 
 	if err != nil {
 		log.Fatal(err)
