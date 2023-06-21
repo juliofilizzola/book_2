@@ -16,8 +16,7 @@ func CreatePublication(context *gin.Context) {
 		Description string
 		Content     string
 	}
-	// @todo create validation email
-	// @todo create password encryption
+
 	err := context.Bind(&body)
 
 	if err != nil {
