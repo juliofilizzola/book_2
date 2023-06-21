@@ -28,8 +28,6 @@ func CreateUser(context *gin.Context) {
 		return
 	}
 
-	passwordHash, err := auth.Hash(body.Password)
-
 	if err != nil {
 		fmt.Println(err)
 		context.Status(http.StatusBadRequest)
@@ -40,7 +38,13 @@ func CreateUser(context *gin.Context) {
 		Name:     body.Name,
 		Email:    body.Email,
 		Nick:     body.Nick,
-		Password: string(passwordHash),
+		Password: body.Password,
+	}
+
+	if err := user.PrepareData(false); err != nil {
+		fmt.Println(err)
+		context.Status(http.StatusBadRequest)
+		return
 	}
 
 	result := initializers.DB.Create(&user)
@@ -117,13 +121,21 @@ func UpdateUser(context *gin.Context) {
 
 	var user models.User
 
-	initializers.DB.First(&user, id)
-
-	result := initializers.DB.Model(&user).Updates(models.User{
+	user = models.User{
 		Name:  body.Name,
 		Email: body.Email,
 		Nick:  body.Nick,
-	})
+	}
+
+	if err := user.PrepareData(true); err != nil {
+		fmt.Println(err)
+		context.Status(http.StatusBadRequest)
+		return
+	}
+
+	initializers.DB.First(&user, id)
+
+	result := initializers.DB.Model(&user).Updates(user)
 
 	if result.Error != nil {
 		fmt.Println(result.Error)
