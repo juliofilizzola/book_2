@@ -20,6 +20,7 @@ func main() {
 
 	authorized := r.Group("/")
 
+	// @todo verificar a possibilidade de criação de um group dentro de outro group
 	authorized.Use(middlewares.Authentication())
 	{
 		// user routes
@@ -27,6 +28,7 @@ func main() {
 		authorized.GET("/user/:id", controllers.GetUser)
 		authorized.PATCH("user/:id", controllers.UpdateUser)
 		authorized.DELETE("user/:id", controllers.DeleteUser)
+
 		// follow routes
 		authorized.PUT("followers/:id/:followerId", controllers.CreateFollowers)
 		authorized.DELETE("followers/:id/:followerId", controllers.DesFollow)
@@ -42,7 +44,10 @@ func main() {
 		authorized.GET("like/:id", controllers.LikePublication)
 		authorized.GET("dislike/:id", controllers.DislikePublication)
 
+		// auth router
+		authorized.PATCH("updatePassword/:id", controllers.UpdatePassword)
 	}
+
 	// user routes
 	r.POST("/user", controllers.CreateUser)
 
