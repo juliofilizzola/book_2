@@ -18,6 +18,11 @@ type User struct {
 	Publication []Publication `gorm:"foreignKey:AuthId"`
 }
 
+type Password struct {
+	NewPassword     string `json:"new_password"`
+	CurrentPassword string `json:"current_password"`
+}
+
 func (u User) PrepareData(edit bool) error {
 	if err := u.validationData(edit); err != nil {
 		return err
