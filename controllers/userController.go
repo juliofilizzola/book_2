@@ -10,7 +10,6 @@ import (
 )
 
 func CreateUser(context *gin.Context) {
-	// @todo create user
 
 	var body struct {
 		Name     string
@@ -18,8 +17,7 @@ func CreateUser(context *gin.Context) {
 		Nick     string
 		Password string
 	}
-	// @todo create validation email
-	// @todo create password encryption
+
 	err := context.Bind(&body)
 
 	if err != nil {
